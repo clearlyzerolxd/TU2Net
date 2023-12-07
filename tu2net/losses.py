@@ -85,15 +85,18 @@ class DiscriminatorLoss_BCE(nn.Module):
         
 
 
-x = torch.rand(size=(4,6,1,256,256))
-y = torch.rand(size=(4,6,1,256,256))
+# x = torch.rand(size=(4,6,1,256,256))
+# y = torch.rand(size=(4,6,1,256,256))
 
-g_resnet = Generator_loss_reconstruction_with_resnet34()
+# g_resnet = Generator_loss_reconstruction_with_resnet34()
 
-print(g_resnet(x,y,torch.tensor(1.0)))
+# G_loss_skillful = Generator_loss_skillful()
 
-DiscriminatorLoss_hinge(dis_real_out,True)
-DiscriminatorLoss_hinge(dis_pre_out,False)
+
+# print(g_resnet(x,y,torch.tensor(1.0)))
+# print(G_loss_skillful(x,y,torch.tensor(1.0)))
+# DiscriminatorLoss_hinge(dis_real_out,True)
+# DiscriminatorLoss_hinge(dis_pre_out,False)
 
         
         

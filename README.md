@@ -86,6 +86,12 @@ print(g_resnet(x,y,torch.tensor(1.0)))
 
 DiscriminatorLoss_hinge(dis_real_out,True)
 DiscriminatorLoss_hinge(dis_pre_out,False)
+
+G_loss_skillful = Generator_loss_skillful()
+print(G_loss_skillful(x,y,torch.tensor(1.0)))
+
+
+
 ```
 
 
