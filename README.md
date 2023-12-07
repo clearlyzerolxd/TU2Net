@@ -113,5 +113,7 @@ python Trainer.py
 - [x] Organize the completed discriminator script
 - [x] Organize the completed loss function script
 - [ ] Create training script
-- [ ] Use ema update the generation
+- [ ] Use ema to update the generation
 - [ ] Add option of whether to normalize during training and sampling
+- [ ] Fix sampling picture display
+- [ ] Sample results in training using eam model
