@@ -114,3 +114,4 @@ python Trainer.py
 - [x] Organize the completed loss function script
 - [ ] Create training script
 - [ ] Use ema update the generation
+- [ ] Add option of whether to normalize during training and sampling
