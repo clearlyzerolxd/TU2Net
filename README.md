@@ -72,6 +72,22 @@ Spatial_net = Spatial().to(device)
 ```
 
 ## loss function
+> We provide several loss functions in losses.py, including some common reconstruction losses.
+```
+from losses import Generator_loss_reconstruction_with_resnet34,Generator_loss_skillful,DiscriminatorLoss_hinge
+x = torch.rand(size=(4,6,1,256,256))
+y = torch.rand(size=(4,6,1,256,256))
+
+g_resnet = Generator_loss_reconstruction_with_resnet34()
+
+print(g_resnet(x,y,torch.tensor(1.0)))
+
+
+
+DiscriminatorLoss_hinge(dis_real_out,True)
+DiscriminatorLoss_hinge(dis_pre_out,False)
+```
+
 
 
 
@@ -84,6 +100,6 @@ Spatial_net = Spatial().to(device)
 # TODO
 - [x] Create  Generator model
 - [x] Complete the image generation script 
+- [x] Organize the completed discriminator script
+- [x] Organize the completed loss function script
 - [ ] Create training script
-- [ ] Organize the completed discriminator script
-- [ ] Organize the completed loss function script

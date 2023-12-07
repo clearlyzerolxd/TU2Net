@@ -7,6 +7,7 @@ from TU2Net import Generator_full
 from Discriminator import Spatial,Temporal
 from torch.utils.data import Dataset
 from torch.utils import data
+from losses import Generator_loss_skillful,DiscriminatorLoss_hinge
 import os
 import numpy
 class MyDataset(Dataset):
@@ -70,9 +71,15 @@ def train():
     for i in range(500):
         for step,data in dataloader:
             x,y = data
+            Generate_net_optim.zero_grad()
             gen_out = Generate_net(x)# The out's shape is -> b t c w h
             dis_out = Temporal_dis(x)
             tem_out = Spatial_dis(x)
+            
+            
+            
+            
+            
             
             
             

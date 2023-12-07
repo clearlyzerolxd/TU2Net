@@ -42,12 +42,10 @@ class Generator_loss_reconstruction_with_resnet34(nn.Module):
         pre_emd = self.model(pre_img)
         emd_distance = nn.functional.mse_loss(org_emb,pre_emd)
         if reconstruction_distance == "l1":
-            
-            reconstruction_loss =  (org_img - pre_img).mean()
-            
+            reconstruction_loss =  torch.abs(org_img - pre_img).mean()
         else:
             reconstruction_loss = nn.functional.mse_loss(org_emb,pre_emd)
-        print(reconstruction_loss)
+        # print(reconstruction_loss)
         total_loss = reconstruction_loss*0.7+ emd_distance*0.3 + loss_dis
         
         return total_loss
@@ -87,13 +85,15 @@ class DiscriminatorLoss_BCE(nn.Module):
         
 
 
-# x = torch.rand(size=(4,6,1,256,256))
-# y = torch.rand(size=(4,6,1,256,256))
+x = torch.rand(size=(4,6,1,256,256))
+y = torch.rand(size=(4,6,1,256,256))
 
-# g_resnet = Generator_loss_reconstruction_with_resnet34()
+g_resnet = Generator_loss_reconstruction_with_resnet34()
 
-# print(g_resnet(x,y,torch.tensor(1.0)))
-        
+print(g_resnet(x,y,torch.tensor(1.0)))
+
+DiscriminatorLoss_hinge(dis_real_out,True)
+DiscriminatorLoss_hinge(dis_pre_out,False)
 
         
         
