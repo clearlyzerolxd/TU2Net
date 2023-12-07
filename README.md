@@ -112,7 +112,7 @@ python Trainer.py
 - [x] Complete the image generation script 
 - [x] Organize the completed discriminator script
 - [x] Organize the completed loss function script
-- [ ] Create training script
+- [x] Create training script
 - [ ] Use ema to update the generation
 - [ ] Add option of whether to normalize during training and sampling
 - [ ] Fix sampling picture display
