@@ -115,5 +115,5 @@ python Trainer.py
 - [x] Create training script
 - [ ] Use ema to update the generation
 - [ ] Add option of whether to normalize during training and sampling
-- [ ] Fix sampling picture display
+- [x] Fix sampling picture display
 - [ ] Sample results in training using eam model
