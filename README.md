@@ -103,3 +103,4 @@ DiscriminatorLoss_hinge(dis_pre_out,False)
 - [x] Organize the completed discriminator script
 - [x] Organize the completed loss function script
 - [ ] Create training script
+- [ ] Use ema update the generation
