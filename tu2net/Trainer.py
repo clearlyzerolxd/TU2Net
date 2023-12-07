@@ -67,14 +67,72 @@ def train():
     
     dataloader =data.DataLoader(mydataset, batch_size=2, shuffle=False)
     
+    # choose generator funciton
+    
+    Generator_loss_skillful_f = Generator_loss_skillful().to(device)
+    DiscriminatorLoss_hinge_f = DiscriminatorLoss_hinge().to(device)
     # x,y = next(iter(dataloader))
     for i in range(500):
         for step,data in dataloader:
+            ### Training the Generate #####
             x,y = data
+            x=x.to(device)
+            y=y.to(device)
+            Generate_net.train()
             Generate_net_optim.zero_grad()
             gen_out = Generate_net(x)# The out's shape is -> b t c w h
-            dis_out = Temporal_dis(x)
-            tem_out = Spatial_dis(x)
+            gen_out_copy = gen_out.copy()
+            tem_out = Temporal_dis(gen_out)
+            spa_loss = Spatial_dis(gen_out)
+            dis_loss = DiscriminatorLoss_hinge_f(spa_loss,True)+DiscriminatorLoss_hinge_f(tem_out,True)
+            Gen_loss = Generator_loss_skillful_f(y,gen_out,dis_loss)
+            Gen_loss.backward()
+            Generate_net_optim.step()
+            
+            
+            
+            
+            ### Train the Discriminatores
+            """
+            traing the spatialdiscriminatores
+            """
+            Spatial_dis_optim.zero_grad()
+            spa_loss_fake = Spatial_dis(gen_out_copy().detach())
+            spa_loss_real = Spatial_dis(y)
+            spa_loss_traing = DiscriminatorLoss_hinge_f(spa_loss_fake,False)+DiscriminatorLoss_hinge_f(spa_loss_real,True)
+            spa_loss_traing.backward()
+            Spatial_dis_optim.step()
+            
+            
+            
+            """
+            traing the Temporaldiscriminatores
+            """
+            
+            Temporal_dis_optim.zero_grad()
+            spa_loss_fake = Temporal_dis(torch.cat([x,gen_out_copy().detach()],dim=1))
+            spa_loss_real = Temporal_dis(torch.cat([x,y],dim=1))
+            Tem_loss_traing = DiscriminatorLoss_hinge_f(spa_loss_fake,False)+DiscriminatorLoss_hinge_f(spa_loss_real,True)
+            Tem_loss_traing.backward()
+            Temporal_dis_optim.step()
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
