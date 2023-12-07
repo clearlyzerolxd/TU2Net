@@ -8,7 +8,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
 import os
-pth_path = "/media/ybxy/c89da59f-580c-440d-bab8-554bd51bb407/tu2NET/Tu2net/tu2net.pth"
+# pth_path = "/media/ybxy/c89da59f-580c-440d-bab8-554bd51bb407/tu2NET/Tu2net/tu2net.pth"
 example_pth = ""
 class Get_tager_sample(Dataset):
 
@@ -36,12 +36,12 @@ val_t = DataLoader(data, batch_size=2,shuffle=False,drop_last=True)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 net = Generator_full(device='cuda:0').to(device)
-net.load_state_dict(torch.load(pth_path))
+# net.load_state_dict(torch.load(pth_path))
 net.eval()
 x,y = next(iter(val_t))
 with torch.no_grad():
     out = net(torch.squeeze(x.to(device))).cpu().detach()
-
+    print(out.shape)
 
 
 out = einops.rearrange(torch.squeeze(out).numpy(),"b t w h -> (b w) (t h)")

@@ -70,7 +70,7 @@ def train():
     for i in range(500):
         for step,data in dataloader:
             x,y = data
-            gen_out = Generate_net(x)
+            gen_out = Generate_net(x)# The out's shape is -> b t c w h
             dis_out = Temporal_dis(x)
             tem_out = Spatial_dis(x)
             

@@ -317,3 +317,4 @@ class time_modify(nn.Module):
 # x = torch.rand(size=(4,6,1,256,256))
 # net = Spatial()
 # x  = net(x)
+# print(x.shape)
