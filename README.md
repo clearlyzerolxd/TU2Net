@@ -93,7 +93,11 @@ print(G_loss_skillful(x,y,torch.tensor(1.0)))
 
 
 ```
-
+## How to train?
+We provide a simple training script that you can modify according to your needs.
+```bash
+python Trainer.py
+```
 
 
 
