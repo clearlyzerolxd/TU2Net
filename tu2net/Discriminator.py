@@ -28,25 +28,19 @@ class Temporal(nn.Module):
         )
         self.Flatten = nn.Flatten(1)
         self.relu = torch.nn.ReLU()
-        # self.endcon = nn.Conv2d(in_channels=2,out_channels=1,kernel_size=1)
+      
         self.end = nn.Sequential(
-            # torch.nn.BatchNorm1d(768),
+            torch.nn.BatchNorm1d(768),
             spectral_norm(torch.nn.Linear(768, 1)))
 
     def forward(self,x):
         x = self.downsample(x)
-        # print(x.shape)
+
         x = self.space2depth(x)
-        # print(x.shape)
         x = torch.permute(x, dims=(0, 2, 1, 3, 4))
         x = self.D_1(x)
         x = self.D_2(x)
-        # x = self.drpout(x)
         x = torch.permute(x, dims=(0, 2, 1, 3, 4))
-
-        # output = []
-        # _, t, h, w, c = x.shape
-        # print(t)
         x = einops.rearrange(x,"b t c w h -> (b t) c w h")
 
 
@@ -57,32 +51,6 @@ class Temporal(nn.Module):
         x = self.end(x)
 
         x = einops.repeat(x,"(b t) n ->b t n",t=2)
-
-        # x = torch.sum(x, keepdim=True, dim=1)
-
-        # for i in range(x.size(1)):
-        #     # print(i)
-        #     x_ = x[:,i,:,:,:]
-        #     print(x_.shape)
-        #     x_ = self.end_d(x_)
-        #
-        #
-        #     # print(x_.shape)
-        #
-        #     # print(x_.shape)
-        #     # x_ = self.Flatten(x_)
-        #
-        #     # print(x_.shape)
-        #
-        #     x_ = torch.sum(self.relu(x_),dim=[2,3])
-        #     x_ = self.end(x_)
-        #     # print(x_.shape)
-        #     output.append(x_)
-        #
-        # output = torch.stack(output,dim=1)
-        # # output = torch.sum(output,keepdim=True,dim=1)
-        # # output =self.relu(output)
-        # return output,torch.sum(output,keepdim=True,dim=1)
         return x
 
 
@@ -104,14 +72,14 @@ class Spatial(nn.Module):
             DBlock(input_channels=384,output_channels=384,keep_same_output=True),
             DBlock(input_channels=384,output_channels=768),
         )
-        # self.Flatten = nn.Flatten(2,3)
+
         self.end = nn.Sequential(
-            # nn.BatchNorm1d(768),
+            nn.BatchNorm1d(768),
             spectral_norm(nn.Linear(768,1))
         )
 
         self.relu = torch.nn.ReLU()
-        # self.sigmoid = torch.nn.Sigmoid()
+
 
     def forward(self,x):
         output = []
@@ -121,9 +89,7 @@ class Spatial(nn.Module):
             x_ = self.downSample(x_)
             x_ = self.s2d(x_)
             x_ = self.d(x_)
-            # x_ = self.Flatten(x_)
-            # print(x_.shape)
-            # print(x_.shape)
+
 
             x_ = torch.sum(self.relu(x_),dim=[2,3])
 
@@ -131,10 +97,6 @@ class Spatial(nn.Module):
             output.append(x_)
 
         output = torch.stack(output,dim=1)
-        # print(output.shape)
-
-
-        # output = torch.sum(output,keepdim=True,dim=1)
 
         return output
 
@@ -164,9 +126,6 @@ class Block(torch.nn.Module):
 
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # print(x.shape)
-        # x__= self.maxpool(x)
-        # print(x__.shape)
         if (self.outchannel==self.inchannel):
             x_ = x
         else:
