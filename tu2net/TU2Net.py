@@ -117,7 +117,7 @@ class RSU4F(nn.Module):
 
 
 class U2Net(nn.Module):
-    def __init__(self, cfg: dict, out_ch: int = 1,device='cude:0'):
+    def __init__(self, cfg: dict, out_ch: int = 1,device='cude:0',frames = 6):
         super().__init__()
         assert "encode" in cfg
         assert "decode" in cfg
@@ -201,6 +201,7 @@ class U2Net(nn.Module):
         self.decode0 = RSU(height=7, in_ch=128, mid_ch=16, out_ch=64)
         self.device = device
         self.att = attblock()
+        self.frames = frames
         # self.side_modules = nn.ModuleList(side_list)
         # self.out_conv = nn.Conv2d(self.encode_num * out_ch, out_ch, kernel_size=1)
 
@@ -221,7 +222,7 @@ class U2Net(nn.Module):
         # # Z_sp = torch.rand(size=(x.size(0),64,4,4)).to(self.device)
         Z_sp = self.att(x)
         # # print(x.shape,Z_sp.shape)
-        prestate_18list = [Z_sp]*6
+        prestate_18list = [Z_sp]*self.frames
         # # prestate_18list = [self.att(x)] * 6
         # # x = encode_outputs
         #
@@ -286,7 +287,7 @@ class U2Net(nn.Module):
         #     return torch.sigmoid(x)
 
   
-def Generator_full(out_ch: int = 1,device="cuda:0"):
+def Generator_full(out_ch: int = 1,frames = 6,device="cuda:0"):
     cfg = {
         # height, in_ch, mid_ch, out_ch, RSU4F, side
         "encode": [[7, 16, 32, 64, False, False],      # En1
@@ -303,7 +304,7 @@ def Generator_full(out_ch: int = 1,device="cuda:0"):
                    [7, 128, 16, 64, False, True]]     # De1
     }
 
-    return U2Net(cfg, out_ch,device)
+    return U2Net(cfg, out_ch,device,frames)
 
 
 def Generator_lite(out_ch: int = 1,device="cuda:0"):

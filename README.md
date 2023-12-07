@@ -84,5 +84,6 @@ Spatial_net = Spatial().to(device)
 # TODO
 - [x] Create  Generator model
 - [x] Complete the image generation script 
+- [ ] Create training script
 - [ ] Organize the completed discriminator script
 - [ ] Organize the completed loss function script
