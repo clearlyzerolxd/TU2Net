@@ -50,7 +50,7 @@ class Temporal(nn.Module):
 
         x = self.end(x)
 
-        x = einops.repeat(x,"(b t) n ->b t n",t=2)
+        # x = einops.rearrange(x,"(b t) n ->b t n",t=2)
         return x
 
 
@@ -315,6 +315,6 @@ class time_modify(nn.Module):
 #         return x
 #
 # x = torch.rand(size=(4,6,1,256,256))
-# net = Spatial()
+# net = Temporal()
 # x  = net(x)
 # print(x.shape)
