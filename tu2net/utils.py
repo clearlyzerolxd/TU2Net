@@ -16,7 +16,7 @@ def rainprint(x:torch.tensor,img_path="result/sample.jpg",remove_background=Fals
     plt.savefig(img_path, bbox_inches='tight', pad_inches=0, dpi=dpi)
     
     
-    
+
     
     
     

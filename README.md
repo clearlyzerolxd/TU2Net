@@ -117,3 +117,4 @@ python Trainer.py
 - [ ] Add option of whether to normalize during training and sampling
 - [x] Fix sampling picture display
 - [ ] Sample results in training using eam model
+- [ ] Use configuration files to manage training scripts 
