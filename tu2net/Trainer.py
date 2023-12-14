@@ -7,7 +7,7 @@ from tqdm import tqdm
 from TU2Net import Generator_full
 from Discriminator import Spatial,Temporal
 from torch.utils.data import Dataset,DataLoader
-
+import yaml
 from losses import Generator_loss_skillful,DiscriminatorLoss_hinge
 import os
 import numpy
@@ -55,9 +55,7 @@ def train():
     
     
     Generate_net_optim = optim.Adam(Generate_net.parameters(),lr=2e-4,betas=(0.0, 0.999))
-    
     Spatial_dis_optim = optim.Adam(Spatial_dis.parameters(),lr=2e-5,betas=(0.0,0.999))
-    
     Temporal_dis_optim = optim.Adam(Temporal_dis.parameters(),lr=2e-5,betas=(0.0,0.999))
     
     
@@ -148,7 +146,7 @@ def train():
             
             
             
-            
-            
 
-train()
+
+if __name__ == '__main__':  
+    train()

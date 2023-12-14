@@ -1,0 +1,11 @@
+configuration:
+  Gen_lr: 4.5e-6
+  Tem_lr: 2.0e-4
+  Spa_lr:  2.0e-4
+  Gen_betas: (0.0, 0.999)
+  Tem_betas: (0.0, 0.999)
+  Spa_betas: (0.0, 0.999)
+  epochs: 500
+  warmupstep: 1000
+  check_point: 10
+  data_path:  /media/ybxy/code/test_3k 
