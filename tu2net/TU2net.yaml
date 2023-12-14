@@ -2,10 +2,11 @@ configuration:
   Gen_lr: 4.5e-6
   Tem_lr: 2.0e-4
   Spa_lr:  2.0e-4
-  Gen_betas: (0.0, 0.999)
-  Tem_betas: (0.0, 0.999)
-  Spa_betas: (0.0, 0.999)
   epochs: 500
-  warmupstep: 1000
   check_point: 10
-  data_path:  /media/ybxy/code/test_3k 
+  cycle_lengths: [10000000000000]
+  f_start: [1.0e-6]
+  f_max: [1.]
+  f_min: [1.]
+  warm_up_steps: [1000]
+  data_path:  /test_3k

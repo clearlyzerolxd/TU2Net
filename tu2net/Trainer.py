@@ -55,7 +55,9 @@ def train():
     
     
     Generate_net_optim = optim.Adam(Generate_net.parameters(),lr=2e-4,betas=(0.0, 0.999))
+    
     Spatial_dis_optim = optim.Adam(Spatial_dis.parameters(),lr=2e-5,betas=(0.0,0.999))
+    
     Temporal_dis_optim = optim.Adam(Temporal_dis.parameters(),lr=2e-5,betas=(0.0,0.999))
     
     
@@ -66,7 +68,7 @@ def train():
     
     print("ready dataset")
     
-    mydataset = MyDataset("/media/ybxy/code/test_3k")
+    mydataset = MyDataset("/test_3k")
     
     dataloader =DataLoader(mydataset, batch_size=2, shuffle=False)
     
