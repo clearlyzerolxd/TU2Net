@@ -11,10 +11,13 @@ class Generator_loss_skillful(nn.Module):
     """
     https://www.nature.com/articles/s41586-021-03854-z
     """
-    def __init__(self):
+    def __init__(self,Normalized = False):
         super(Generator_loss_skillful, self).__init__()
-        
+        self.Normalized = Normalized
     def forward(self, org_img, pre_img, loss_dis):
+        if self.Normalized:
+            org_img = org_img * 22.0
+            pre_img = pre_img * 22.0
         weights = torch.clip(org_img, 0.0, 22.0)
         loss = torch.mean(torch.abs(org_img - pre_img) * weights)
         x = loss_dis+loss

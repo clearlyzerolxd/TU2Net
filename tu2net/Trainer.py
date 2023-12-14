@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
+from tqdm import tqdm
 from TU2Net import Generator_full
 from Discriminator import Spatial,Temporal
 from torch.utils.data import Dataset,DataLoader
@@ -12,18 +13,20 @@ import os
 import numpy
 class MyDataset(Dataset):
     """rainfall data """
-    def __init__(self,data_path):
+    def __init__(self,data_path,Normalized =False):
         super(MyDataset, self).__init__()
         self.path =os.listdir(data_path)
         self.root_path = data_path
+        self.Normalized = Normalized
         print("There are {} sets of data in total".format(len(self.path)))
     def __getitem__(self, index):
         x = numpy.load(os.path.join(self.root_path,self.path[index]))
         # print(x.shape)
         
         x = torch.from_numpy(x)
-        x = torch.clip(x,0,20)
-        x = x/20.0
+        if self.Normalized:
+            x = torch.clip(x,0,22.0)
+            x = x/22.0
         return x[:4],x[4:10]
 
     def __len__(self):
@@ -65,9 +68,9 @@ def train():
     
     print("ready dataset")
     
-    mydataset = MyDataset("tu2net/example")
+    mydataset = MyDataset("/media/ybxy/code/test_3k")
     
-    dataloader =DataLoader(mydataset, batch_size=3, shuffle=False)
+    dataloader =DataLoader(mydataset, batch_size=2, shuffle=False)
     
     # choose generator funciton
     
@@ -75,7 +78,7 @@ def train():
     DiscriminatorLoss_hinge_f = DiscriminatorLoss_hinge().to(device)
     # x,y = next(iter(dataloader))
     for epoch in range(500):
-        for step,dataes in enumerate(dataloader):
+        for step,dataes in enumerate(tqdm(dataloader)):
             ### Training the Generate #####
             x,y = dataes
             x=x.to(device)
