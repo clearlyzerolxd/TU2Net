@@ -118,3 +118,4 @@ python Trainer.py
 - [x] Fix sampling picture display
 - [ ] Sample results in training using eam model
 - [ ] Use configuration files to manage training scripts 
+- [x] Network warm-up

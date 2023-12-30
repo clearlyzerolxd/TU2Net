@@ -11,7 +11,8 @@ import yaml
 from losses import Generator_loss_skillful,DiscriminatorLoss_hinge
 import os
 import numpy
-
+from tu2net.lr_scheduler import LambdaLinearScheduler
+import torch.optim.lr_scheduler as lr_scheduler
 from tu2net.utils import rainprint
 class MyDataset(Dataset):
     """rainfall data """
@@ -63,8 +64,23 @@ def train():
     Temporal_dis_optim = optim.Adam(Temporal_dis.parameters(),lr=2e-5,betas=(0.0,0.999))
     
     
+    scheduler_Gen = lr_scheduler.LambdaLR(Generate_net_optim, lr_lambda=LambdaLinearScheduler(warm_up_steps=warm_up_steps, f_max=f_min, f_min=f_max, f_start=f_start,
+                                                                                          cycle_lengths=cycle_lengths).schedule)
+    
+    scheduler_Spa = lr_scheduler.LambdaLR(Spatial_dis_optim, lr_lambda=LambdaLinearScheduler(warm_up_steps=warm_up_steps, f_max=f_min, f_min=f_max, f_start=f_start,
+                                                                                          cycle_lengths=cycle_lengths).schedule)
+    
+    scheduler_Tem = lr_scheduler.LambdaLR(Temporal_dis_optim, lr_lambda=LambdaLinearScheduler(warm_up_steps=warm_up_steps, f_max=f_min, f_min=f_max, f_start=f_start,
+                                                                                          cycle_lengths=cycle_lengths).schedule)
+    
     print("Spatial_dis_sum total number of parameters is {}MB \nTemporal_dis_sum total number of parameters is {}MB".format(round(Temporal_dis_sum,2),round(Spatial_dis_sum,2)))
     
+    
+    cycle_lengths=[10000000000000]
+    f_start = [1e-6]
+    f_max = [1.]
+    f_min = [1.]
+    warm_up_steps = [1000]
     
     
     
@@ -126,6 +142,12 @@ def train():
             
             write.add_scalar("Temporal loss",Tem_loss_traing.item(),step*epoch+step)
             #write.add_image("Sampling during training",gen_out_copy.detach(),step*epoch+step)
+            write.add_scalar("Gen_lr",Generate_net_optim.param_groups[0]['lr'],step*epoch+step)
+            write.add_scalar("Spa_lr",Spatial_dis_optim.param_groups[0]['lr'],step*epoch+step)
+            write.add_scalar("Tem_lr",Temporal_dis_optim.param_groups[0]['lr'],step*epoch+step)
+            scheduler_Gen.step()
+            scheduler_Spa.step()
+            scheduler_Tem.step()
         if epoch%10==0:
             rainprint(torch.cat([x,gen_out_copy.detach()],dim=0)[:2,...],"tu2net/Sampe_reslut_during_training/{}.jpg".format(epoch))
             torch.save(Generate_net.state_dict(),"tu2net/Generate_pth/gen-{}.pth".format(epoch))
