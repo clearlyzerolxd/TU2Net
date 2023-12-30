@@ -11,6 +11,8 @@ import yaml
 from losses import Generator_loss_skillful,DiscriminatorLoss_hinge
 import os
 import numpy
+
+from tu2net.utils import rainprint
 class MyDataset(Dataset):
     """rainfall data """
     def __init__(self,data_path,Normalized =False):
@@ -109,7 +111,7 @@ def train():
             Spatial_dis_optim.step()
             
             write.add_scalar("Spatial loss",spa_loss_traing.item(),step*epoch+step)
-            # write.add_image()
+            
             
             """
             traing the Temporaldiscriminatores
@@ -123,8 +125,9 @@ def train():
             Temporal_dis_optim.step()
             
             write.add_scalar("Temporal loss",Tem_loss_traing.item(),step*epoch+step)
-            
+            #write.add_image("Sampling during training",gen_out_copy.detach(),step*epoch+step)
         if epoch%10==0:
+            rainprint(torch.cat([x,gen_out_copy.detach()],dim=0)[:2,...],"tu2net/Sampe_reslut_during_training/{}.jpg".format(epoch))
             torch.save(Generate_net.state_dict(),"tu2net/Generate_pth/gen-{}.pth".format(epoch))
             torch.save(Temporal_dis.state_dict(),"tu2net/Tem_pth/gen-{}.pth".format(epoch))
             torch.save(Spatial_dis.state_dict(),"tu2net/Spa_pth/gen-{}.pth".format(epoch))
