@@ -119,3 +119,15 @@ python Trainer.py
 - [ ] Sample results in training using eam model
 - [ ] Use configuration files to manage training scripts 
 - [x] Network warm-up
+
+
+# BibTeX
+```
+@article{ling2024tu2net,
+  title={TU2Net-GAN: A temporal precipitation nowcasting model with multiple decoding modules},
+  author={Ling, XuDong and Li, ChaoRong and Yang, Peng and Huang, Yuanyuan and Qin, Fengqing},
+  journal={Pattern Recognition Letters},
+  year={2024},
+  publisher={Elsevier}
+}
+```
