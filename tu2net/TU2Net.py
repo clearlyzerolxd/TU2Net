@@ -202,17 +202,13 @@ class U2Net(nn.Module):
         self.device = device
         self.att = attblock()
         self.frames = frames
-        # self.side_modules = nn.ModuleList(side_list)
-        # self.out_conv = nn.Conv2d(self.encode_num * out_ch, out_ch, kernel_size=1)
 
     def forward(self, x: torch.Tensor):
         x = self.space2depth(x)
-        # _, _, h, w = x.shape
-        # collect encode outputs
         encode_outputs = []
         for i, m in enumerate(self.encode_modules):
             x = m(x)
-            # print(x.shape)
+
             encode_outputs.append(x)
             if i != self.encode_num - 1:
                 x = F.max_pool2d(x, kernel_size=2, stride=2, ceil_mode=True)
@@ -221,7 +217,7 @@ class U2Net(nn.Module):
 
         # # Z_sp = torch.rand(size=(x.size(0),64,4,4)).to(self.device)
         Z_sp = self.att(x)
-        # # print(x.shape,Z_sp.shape)
+
         prestate_18list = [Z_sp]*self.frames
         # # prestate_18list = [self.att(x)] * 6
         # # x = encode_outputs
