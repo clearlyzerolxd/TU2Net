@@ -263,28 +263,7 @@ class U2Net(nn.Module):
 
         hidden_states = [self.end(h4) for h4 in hidden_states]
         return torch.stack(hidden_states,dim=1)
-        # return 1
-        # decode_outputs = [x]
-        # for m in self.decode_modules:
-        #     x2 = encode_outputs.pop()
-        #     x = F.interpolate(x, size=x2.shape[2:], mode='bilinear', align_corners=False)
-        #     x = m(torch.concat([x, x2], dim=1))
-        #     decode_outputs.insert(0, x)
-        #
-        # # collect side outputs
-        # side_outputs = []
-        # for m in self.side_modules:
-        #     x = decode_outputs.pop()
-        #     x = F.interpolate(m(x), size=[h, w], mode='bilinear', align_corners=False)
-        #     side_outputs.insert(0, x)
-        #
-        # x = self.out_conv(torch.concat(side_outputs, dim=1))
-        #
-        # if self.training:
-        #     # do not use torch.sigmoid for amp safe
-        #     return [x] + side_outputs
-        # else:
-        #     return torch.sigmoid(x)
+
 
   
 def Generator_full(out_ch: int = 1,frames = 6,device="cuda:0"):
@@ -307,60 +286,4 @@ def Generator_full(out_ch: int = 1,frames = 6,device="cuda:0"):
     return U2Net(cfg, out_ch,device,frames)
 
 
-def Generator_lite(out_ch: int = 1,device="cuda:0"):
-    cfg = {
-        # height, in_ch, mid_ch, out_ch, RSU4F, side
-        "encode": [[7, 16, 16, 64, False, False],  # En1
-                   [7, 64, 16, 64, False, False],  # En2
-                   [7, 64, 16, 64, False, False],  # En3
-                   [4, 64, 16, 64, False, False],  # En4
-                   [4, 64, 16, 64, True, False],  # En5
-                   [4, 64, 16, 64, True, True]],  # En6
-        # height, in_ch, mid_ch, out_ch, RSU4F, side
-        "decode": [[4, 64, 16, 64, True, True],  # De5
-                   [4, 64, 16, 64, False, True],  # De4
-                   [5, 64, 16, 64, False, True],  # De3
-                   [6, 64, 16, 64, False, True],  # De2
-                   [7, 64, 16, 64, False, True]]  # De1
-    }
 
-    return U2Net(cfg, out_ch,device)
-
-
-def convert_onnx(m, save_path):
-    m.eval()
-    x = torch.rand(1, 3, 288, 288, requires_grad=True)
-
-    # export the model
-    torch.onnx.export(m,  # model being run
-                      x,  # model input (or a tuple for multiple inputs)
-                      save_path,  # where to save the model (can be a file or file-like object)
-                      export_params=True,
-                      opset_version=11)
-
-# print(torch.cuda.memory_allocated() / 1024 / 1024)
-# gen = u2net_full().to("cuda:0")
-# x = torch.rand(size=(4,4,256,256)).to("cuda:0")
-# x = gen(x)
-# print(torch.cuda.memory_allocated() / 1024 / 1024)
-# print(x.shape)
-# gen = u2net_lite().to("cuda:0")
-# x = torch.rand(size=(4,4,256,256)).to("cuda:0")
-# gen(x)
-# print(gen)
-# if __name__ == '__main__':
-#     # n_m = RSU(height=7, in_ch=3, mid_ch=12, out_ch=3)
-#     # convert_onnx(n_m, "RSU7.onnx")
-#     #
-#     # n_m = RSU4F(in_ch=3, mid_ch=12, out_ch=3)
-#     # convert_onnx(n_m, "RSU4F.onnx")
-# u2net = u2net_lite().to("cuda:0")
-# x = torch.zeros(size=(4,4,256,256)).to("cuda:0")
-# print(u2net(x))
-#     print(torch.cuda.memory_allocated() / 1024 / 1024)
-#     x = u2net(x)
-#     print(x.shape)
-#     # for i in x:
-#     #     print(i.shape)
-#     # print(torch.cuda.memory_allocated() / 1024 / 1024)
-#     # convert_onnx(u2net, "u2net_full.onnx")
