@@ -11,9 +11,9 @@ import yaml
 from losses import Generator_loss_skillful,DiscriminatorLoss_hinge
 import os
 import numpy
-from tu2net.lr_scheduler import LambdaLinearScheduler
+from lr_scheduler import LambdaLinearScheduler
 import torch.optim.lr_scheduler as lr_scheduler
-from tu2net.utils import rainprint
+from utils import rainprint
 class MyDataset(Dataset):
     """rainfall data """
     def __init__(self,data_path,Normalized =False):
@@ -55,7 +55,11 @@ def train():
     
     Temporal_dis_sum = sum(p.numel() for p in Temporal_dis.parameters())* 4 / (1024 ** 2)
     
-    
+    cycle_lengths=[10000000000000]
+    f_start = [1e-6]
+    f_max = [1.]
+    f_min = [1.]
+    warm_up_steps = [1000]
     
     Generate_net_optim = optim.Adam(Generate_net.parameters(),lr=2e-4,betas=(0.0, 0.999))
     
@@ -76,19 +80,15 @@ def train():
     print("Spatial_dis_sum total number of parameters is {}MB \nTemporal_dis_sum total number of parameters is {}MB".format(round(Temporal_dis_sum,2),round(Spatial_dis_sum,2)))
     
     
-    cycle_lengths=[10000000000000]
-    f_start = [1e-6]
-    f_max = [1.]
-    f_min = [1.]
-    warm_up_steps = [1000]
+
     
     
     
     print("ready dataset")
     
-    mydataset = MyDataset("/test_3k")
+    mydataset = MyDataset("/example")
     
-    dataloader =DataLoader(mydataset, batch_size=2, shuffle=False)
+    dataloader =DataLoader(mydataset, batch_size=2, shuffle=False,drop_last=True)
     
     # choose generator funciton
     
@@ -149,7 +149,8 @@ def train():
             scheduler_Spa.step()
             scheduler_Tem.step()
         if epoch%10==0:
-            rainprint(torch.cat([x,gen_out_copy.detach()],dim=0)[:2,...],"tu2net/Sampe_reslut_during_training/{}.jpg".format(epoch))
+            print(x.shape,gen_out_copy.shape)
+            rainprint(torch.concat([x,gen_out_copy.detach()],dim=1),"tu2net/Sampe_reslut_during_training/{}.jpg".format(epoch))
             torch.save(Generate_net.state_dict(),"tu2net/Generate_pth/gen-{}.pth".format(epoch))
             torch.save(Temporal_dis.state_dict(),"tu2net/Tem_pth/gen-{}.pth".format(epoch))
             torch.save(Spatial_dis.state_dict(),"tu2net/Spa_pth/gen-{}.pth".format(epoch))

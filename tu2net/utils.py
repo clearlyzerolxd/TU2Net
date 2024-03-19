@@ -4,7 +4,9 @@ import einops
 import numpy
 
 def rainprint(x:torch.tensor,img_path="result/sample.jpg",remove_background=False,dpi=300,vmax=10,vmin = 0,cmap = "jet",renormalization=True):
-    out = einops.rearrange(torch.squeeze(x).numpy(),"b t w h -> (b w) (t h)")
+    # x = x.detach().cpu().numpy()
+    # print(x.shape)
+    out = einops.rearrange(torch.squeeze(x.detach().cpu()).numpy(),"b t w h -> (b w) (t h)")
     if renormalization:
         out = out*22.0
     plt.figure(figsize=(9, 9))

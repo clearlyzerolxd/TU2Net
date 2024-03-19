@@ -207,7 +207,7 @@ class U2Net(nn.Module):
 
     def forward(self, x: torch.Tensor):
         x = self.space2depth(x)
-        _, _, h, w = x.shape
+        # _, _, h, w = x.shape
         # collect encode outputs
         encode_outputs = []
         for i, m in enumerate(self.encode_modules):
